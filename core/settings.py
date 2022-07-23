@@ -51,7 +51,7 @@ THIRD_PARTY_APPS = [
     "rest_framework.authtoken",
 ]
 
-INSTALLED_APPS = DJANGO_APPS + MY_APPS
+INSTALLED_APPS = DJANGO_APPS + MY_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
