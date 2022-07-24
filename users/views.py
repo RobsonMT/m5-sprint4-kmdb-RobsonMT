@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView, Request, Response, status
+from core.pagination import CustomPageNumberPagination
 
 from users.models import User
 
@@ -42,16 +43,19 @@ class LoginView(APIView):
         return Response({"token": token.key}, status.HTTP_200_OK)
 
 
-class UserView(APIView):
+class UserView(APIView, CustomPageNumberPagination):
     authentication_classes = [TokenAuthentication]
     permission_classes = [UserPermission]
     # permission_classes = [IsAuthenticated]
 
-    def get(self, _: Request):
+    def get(self, request: Request):
         users = User.objects.all()
-        serialized = UserSerializer(users, many=True)
+        pagination = self.paginate_queryset(queryset=users, request=request, view=self)
+        # serialized = UserSerializer(users, many=True)
+        serialized = UserSerializer(pagination, many=True)
 
-        return Response(serialized.data, status.HTTP_200_OK)
+        # return Response(serialized.data, status.HTTP_200_OK)
+        return self.get_paginated_response(serialized.data)
 
 
 class UserIdView(APIView):
