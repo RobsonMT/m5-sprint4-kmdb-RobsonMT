@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from genres.models import Genre
 
+from genres.models import Genre
 from genres.serializers import GenreSerializer
 from movies.models import Movie
 
@@ -16,7 +16,6 @@ class MovieSerializer(serializers.Serializer):
     genres = GenreSerializer(many=True)
 
     def create(self, validated_data):
-
         genres_data = validated_data.pop("genres")
         movie = Movie.objects.create(**validated_data)
 

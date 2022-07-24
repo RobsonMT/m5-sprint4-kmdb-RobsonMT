@@ -1,6 +1,6 @@
 from rest_framework import serializers, status
-from core.exceptions import UniqueException
 
+from core.exceptions import UniqueException
 from users.models import User
 
 

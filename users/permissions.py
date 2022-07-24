@@ -5,9 +5,6 @@ from rest_framework.views import Request
 class UserPermission(BasePermission):
     def has_permission(self, request: Request, _):
 
-        print("\n\n", request.user, "\n\n")
-        print("\n\n", request.method, "\n\n")
-
         superuser_methods = {
             "GET",
         }

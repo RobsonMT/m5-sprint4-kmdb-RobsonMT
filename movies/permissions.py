@@ -5,8 +5,6 @@ from rest_framework.views import Request
 class MoviePermission(BasePermission):
     def has_permission(self, request: Request, _):
 
-        print("\n\n", request.method, "\n\n")
-
         superuser_methods = {
             "POST",
             "PATCH",

@@ -1,10 +1,11 @@
 from django.forms import ValidationError
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
+
 from movies.models import Movie
 from users.models import User
 
 from .models import Review
-from django.shortcuts import get_object_or_404
 
 
 class CriticSerializer(serializers.ModelSerializer):
@@ -33,4 +34,5 @@ class ReviewSerializer(serializers.ModelSerializer):
         movie_id = validated_data.pop("movie_id")
         movie: Movie = get_object_or_404(Movie, pk=movie_id)
         review = Review.objects.create(movie=movie, **validated_data)
+
         return review

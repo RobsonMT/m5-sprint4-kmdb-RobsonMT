@@ -1,10 +1,9 @@
 from django.forms import ValidationError
 from django.shortcuts import get_object_or_404
-
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.views import APIView, Request, Response, status
-from core.pagination import CustomPageNumberPagination
 
+from core.pagination import CustomPageNumberPagination
 from movies.models import Movie
 from movies.permissions import MoviePermission
 from movies.serializers import MovieSerializer
@@ -23,7 +22,6 @@ class MovieView(APIView, CustomPageNumberPagination):
 
     def post(self, request: Request):
         serialized = MovieSerializer(data=request.data)
-
         serialized.is_valid(raise_exception=True)
         serialized.save()
 
@@ -37,31 +35,29 @@ class MovieIdView(APIView):
     def get(self, _, movie_id: str):
         try:
             movie = get_object_or_404(Movie, pk=movie_id)
+            serialized = MovieSerializer(instance=movie)
+
+            return Response(serialized.data, status.HTTP_200_OK)
         except ValidationError as error:
             return Response({"error": error}, status=status.HTTP_404_NOT_FOUND)
-
-        serialized = MovieSerializer(instance=movie)
-
-        return Response(serialized.data, status.HTTP_200_OK)
 
     def patch(self, request, movie_id):
         try:
             movie = get_object_or_404(Movie, pk=movie_id)
+
+            serialized = MovieSerializer(movie, request.data, partial=True)
+            serialized.is_valid(raise_exception=True)
+            serialized.save()
+
+            return Response(serialized.data)
         except ValidationError as error:
             return Response({"error": error}, status=status.HTTP_404_NOT_FOUND)
-
-        serialized = MovieSerializer(movie, request.data, partial=True)
-        serialized.is_valid(raise_exception=True)
-        serialized.save()
-
-        return Response(serialized.data)
 
     def delete(self, _, movie_id):
         try:
             movie = get_object_or_404(Movie, pk=movie_id)
+            movie.delete()
+
+            return Response(status=status.HTTP_204_NO_CONTENT)
         except ValidationError as error:
             return Response({"error": error}, status=status.HTTP_404_NOT_FOUND)
-
-        movie.delete()
-
-        return Response(status=status.HTTP_204_NO_CONTENT)
