@@ -35,7 +35,7 @@ class LoginView(APIView):
 
         if not user:
             return Response(
-                {"detail": "Invalid credentials."}, status.HTTP_401_UNAUTHORIZED
+                {"detail": "Invalid email or password."}, status.HTTP_401_UNAUTHORIZED
             )
 
         token, _ = Token.objects.get_or_create(user=user)

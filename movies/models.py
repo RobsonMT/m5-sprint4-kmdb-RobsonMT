@@ -10,3 +10,5 @@ class Movie(models.Model):
     premiere = models.DateField()
     classification = models.IntegerField()
     synopsis = models.TextField()
+
+    genres = models.ManyToManyField(to="genres.Genre")
